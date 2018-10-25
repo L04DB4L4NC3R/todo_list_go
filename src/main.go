@@ -8,6 +8,10 @@ import (
 
 var items = []string{"milk", "eggs", "ham"}
 
+type Data struct {
+	Items []string
+}
+
 func main() {
 	myMux := http.NewServeMux()
 	templ := genTemp()
@@ -15,7 +19,8 @@ func main() {
 		file := r.URL.Path[1:]
 		t := templ.Lookup(file + ".html")
 		if t != nil {
-			err := t.Execute(w, items)
+			itemObj := Data{items}
+			err := t.Execute(w, itemObj)
 			if err != nil {
 				log.Println(err)
 			}
