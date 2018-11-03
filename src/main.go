@@ -1,38 +1,20 @@
 package main
 
 import (
-	"html/template"
-	"log"
 	"net/http"
+
+	"./view"
 )
 
-var items = []string{"milk", "eggs", "ham"}
-
-type Data struct {
-	Items []string
-}
-
 func main() {
-	myMux := http.NewServeMux()
-	templ := genTemp()
-	myMux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		file := r.URL.Path[1:]
-		t := templ.Lookup(file + ".html")
-		if t != nil {
-			itemObj := Data{items}
-			err := t.Execute(w, itemObj)
-			if err != nil {
-				log.Println(err)
-			}
-		} else {
-			w.WriteHeader(http.StatusNotFound)
+	templates := templ.PopulateTemplates()
+	http.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
+		// w.Write([]byte("Test"))
+		res := templates.Lookup("index.html")
+		if res != nil {
+			templates.Execute(w, nil)
+
 		}
 	})
-	log.Fatal(http.ListenAndServe(":3000", myMux))
-}
-
-func genTemp() *template.Template {
-	t := template.New("index.html")
-	template.Must(t.ParseGlob("views/*.html"))
-	return t
+	http.ListenAndServe(":3000", nil)
 }
