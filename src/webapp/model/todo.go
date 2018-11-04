@@ -7,12 +7,13 @@ type todo struct {
 }
 
 type Todolist struct {
-	Name string
-	Todo []todo
+	Username string
+	Password string
+	Todo     []todo
 }
 
 func Newdata() Todolist {
-	return Todolist{Name: "angad", Todo: getData()}
+	return Todolist{Username: "root", Password: "toor", Todo: getData()}
 }
 
 func getData() []todo {
