@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"html/template"
 	"log"
 	"net/http"
@@ -17,7 +18,6 @@ func (a auth) router() {
 }
 
 func (a auth) HandleAuth(w http.ResponseWriter, r *http.Request) {
-	user := model.NewUserType()
 	if r.Method == http.MethodGet {
 		a.temp.Execute(w, nil)
 	} else if r.Method == http.MethodPost {
@@ -26,6 +26,13 @@ func (a auth) HandleAuth(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 		}
 		f := r.Form
-		user, err = model.LoginUser(f.Get("username"), f.Get("password"))
+		user, err := model.LoginUser(f.Get("username"), f.Get("password"))
+		if err != nil {
+			log.Println(err)
+		} else {
+			ctx := context.WithValue(context.Background(), "username", user.Username)
+			r.WithContext(ctx)
+			http.Redirect(w, r, "/todo", http.StatusMovedPermanently)
+		}
 	}
 }

@@ -27,6 +27,7 @@ func connectToDB() *sql.DB {
 	if err != nil {
 		log.Fatalln(fmt.Errorf("Error connecting to DB"))
 	}
+	fmt.Println("Connected to DB")
 	model.StartupDB(db)
 	return db
 }

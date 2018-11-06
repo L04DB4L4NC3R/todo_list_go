@@ -73,5 +73,6 @@ func RegisterUser(username, password string) (*Usertype, error) {
 }
 
 func NewUserType() *Usertype {
-	return &Usertype{}
+	u := &Usertype{}
+	return u
 }
